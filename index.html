@@ -36,7 +36,7 @@
 
 </head>
 <body>
-    <p id="count">60</p>
+    <p id="count"></p>
     <div id="wrap">
         <p id="text"></p>
     </div>
@@ -47,8 +47,8 @@
         const wrap = document.getElementById('wrap');
         const start = document.getElementById('start');
         const p = document.getElementById('text');
+        const count = document.getElementById('count');
       
-
         const textLists = [
             'hello World' ,
             'This is my App',
@@ -68,42 +68,33 @@
         ];
 
         let checkTexts = [];
+        let score = 0;
+        const timer_count = 3;
+
+        const rank_c_point = 100;
+        const rank_b_point = 200;
+        const rank_a_point = 300;
+
+        count.textContent = timer_count;
 
         const createText = () => {
-
             const rnd = Math.floor(Math.random() * textLists.length);
-
             p.textContent = '';
-
-            checkTexts = textLists[rnd] .split('').map(value => {
-               
+            checkTexts = textLists[rnd].split('').map(value => {
                 const span = document.createElement('span');
-
                 span.textContent = value;
-
                 p.appendChild(span);
-
                 return span;
-
             })
         };
 
-        let score = 0;
-
-
         const keyDown = e => {
-
             if(e.key === checkTexts[0].textContent) {
-
                 checkTexts[0].className = 'add-color';
-
                 checkTexts.shift();
-
                 score++;
-
-                if(!checkTexts.length) createText();
-                   
-            }else if(e.key === 'shift') {
+                if(0 >= checkTexts.length) createText();
+            }else if(e.key === 'Shift') {
                 wrap.style.backgroundColor = '#666';
             }else {
                 wrap.style.backgroundColor = 'red';
@@ -114,57 +105,39 @@
 
             let text ='';
 
-            if(score<100) {
-                text = `あなたのランクはCです。\nBランクまであと${100 - score}文字です`
-            }else if (score < 200) {
-                text = `あなたのランクはBです。\nBランクまであと${200 - score}文字です`
-            }else if (score < 300) {
-                text = `あなたのランクはAです。\nBランクまであと${300 - score}文字です`
-            }else if (300 >= 300) {
+            if(score<rank_c_point) {
+                text = `あなたのランクはCです。\nBランクまであと${rank_c_point - score}文字です`
+            }else if (score < rank_b_point) {
+                text = `あなたのランクはBです。\nBランクまであと${rank_b_point - score}文字です`
+            }else if (score < rank_a_point) {
+                text = `あなたのランクはAです。\nBランクまであと${rank_a_point - score}文字です`
+            }else{
                 text = `あなたのランクはSです。＼おめでとうございます`
             }
-
             return `${score}文字打てました。\n${text}\[OK]リトライ/[キャンセル]終了`;
         };
 
         const gameOver = id => {
-
             clearInterval(id);
-
             const result = confirm(rankCheck(score));
-
             if(result) window.location.reload();
         };
 
         const timer = () => {
-
-            let time = 60;
-
-            const count = document.getElementById('count');
-
+            let time = timer_count;            
             const id = setInterval(() => {
-
-                if(time <= 0)gameOver(id);
-
+                if(time <= 0) gameOver(id);
                 count.textContent = time--;
-
-            },1000 );
+            }, 1000);
         };
 
         start.addEventListener('click', () => {
-
             timer();
-
             createText();
-
             start.style.display ='none';
-
             document.addEventListener('keydown', keyDown);
-
         });
 
-
-    
     </script>
 </body>
 </html>
